@@ -1,0 +1,2 @@
+requests==2.24.0
+trello==0.9.7.3
