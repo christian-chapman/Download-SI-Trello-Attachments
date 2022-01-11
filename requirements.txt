@@ -1,2 +1,2 @@
-requests==2.24.0
-trello==0.9.7.3
+py_trello==0.18.0
+requests==2.25.1
