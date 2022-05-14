@@ -93,19 +93,25 @@ def open_attachments(class_name, semester, attachment_url):
         attachment_url = create_onedrive_directdownload(attachment_url.split()[0])
 
     elif "https://docs.google.com" in attachment_url:
-        r = requests.get(attachment_url, allow_redirects=True, auth=client.oauth)
+        try:
+            r = requests.get(attachment_url, allow_redirects=True, auth=client.oauth)
 
-        if r.status_code != 200:
-            print(f"Error with downloading a google file present in {class_name}. HTTP Error code:{r.status_code}")
-            print("Continuing to download the rest of the files...")
-            return
+            if r.status_code != 200:
+                print(f"Error with downloading a google file present in {class_name}. HTTP Error code:{r.status_code}")
+                print("Continuing to download the rest of the files...")
+                return
 
-        req_json_header = r.headers.get("Content-Disposition")
-        file_name = req_json_header.split('"')[1]
+            req_json_header = r.headers.get("Content-Disposition")
+            file_name = req_json_header.split('"')[1]
 
-        file = open(current_dir + '/' + file_name, 'wb')
-        file.write(r.content)
-        file.close()
+            file = open(current_dir + '/' + file_name, 'wb')
+            file.write(r.content)
+            file.close()
+
+        except Exception as e:
+            print(f"Exception encountered {e}\n Helpful Info: class name: {class_name}, with link: {attachment_url}")
+            print("Continuing with the rest of the classes.")
+
 
         return  # need to return to avoid running code below that downloads for trello and one drive attachments
 
